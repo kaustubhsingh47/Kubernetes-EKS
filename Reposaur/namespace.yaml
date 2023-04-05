@@ -1,0 +1,6 @@
+# Namespace for the Reposaur
+
+ apiVersion: v1
+ kind: Namespace
+ metadata:
+   name: Reposaur

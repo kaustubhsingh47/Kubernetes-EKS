@@ -1,0 +1,48 @@
+#Reposaur image is needed to be created and pushed to registry before deploying this yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reposaur-deployment
+  namespace: Reposaur
+spec:
+  selector:
+    matchLabels:
+      app: reposaur
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: reposaur
+    spec:
+      containers:
+      - name: reposaur
+        image: kaustubhsingh47/reposaur:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DATABASE_URL
+          value: <your-database-url>
+        - name: AWS_REGION
+          value: us-east-1
+        envFrom:
+        - secretRef:
+            name: secret-reposaur
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: reposaur-service
+  namespace: Reposaur
+spec:
+  selector:
+    app: reposaur
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+
+
